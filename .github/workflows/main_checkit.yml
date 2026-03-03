@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: '20.x'
 
       - name: Install and Build
         run: |
@@ -25,6 +25,22 @@ jobs:
         env:
           CI: false
 
+      - name: Create server.js
+        run: |
+          cat > server.js << 'EOF'
+          const express = require('express');
+          const path = require('path');
+          const app = express();
+          app.use(express.static(path.join(__dirname, 'build')));
+          app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, 'build', 'index.html'));
+          });
+          const port = process.env.PORT || 8080;
+          app.listen(port, '0.0.0.0', () => {
+            console.log('Server running on port ' + port);
+          });
+          EOF
+
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
@@ -32,6 +48,3 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4C6864D888A44273A80164BDC2E01905 }}
-
-
-
