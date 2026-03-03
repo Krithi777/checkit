@@ -206,39 +206,8 @@ function ComparisonChart({ history, metrics, selectedMetric }) {
       return h.score;
     };
 
-    // Draw each password as a line
-   history.forEach((h, hi) => {
-  const color = LINE_COLORS[hi % LINE_COLORS.length];
-  const pts = metrics.map((m, mi) => ({
-    x: N === 1 ? padL + chartW / 2 : padL + (hi / (N - 1)) * chartW,
-    y: padT + chartH - (getVal(h, m) / 100) * chartH,
-    val: getVal(h, m),
-    metric: m
-  }));
-
-  // ADD THIS — draw lines between points
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  pts.forEach((pt, i) => {
-    if (i === 0) ctx.moveTo(pt.x, pt.y);
-    else ctx.lineTo(pt.x, pt.y);
-  });
-  ctx.stroke();
-
-  // ADD THIS — draw dots at each point
-  pts.forEach((pt) => {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-    ctx.fill();
-  });
-});
-
-      // draw one point per metric or a line across metrics?
-      // For multi-metric view: x = metric index
-    });
-
+   
+    // Drawing handled below in the N===1 / else branches
     // ── Mode: x-axis = passwords, y = selected metric value ──
     if (N === 1) {
       // Single dot
