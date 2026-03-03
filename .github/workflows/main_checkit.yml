@@ -25,17 +25,11 @@ jobs:
         env:
           CI: false
 
-      - name: Create deployment package
-        run: |
-          cp package.json build/
-          cp package-lock.json build/
-          cd build
-          npm install --omit=dev
-
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'checkit'
           slot-name: 'Production'
-          package: ./build
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4C6864D888A44273A80164BDC2E01905 }}
+node server.js
